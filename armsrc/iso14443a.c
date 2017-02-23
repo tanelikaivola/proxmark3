@@ -1199,7 +1199,7 @@ void SimulateIso14443aTag(int tagType, int uid_1st, int uid_2nd, byte_t* data)
 		cmdsRecvd++;
 
 		if (p_response != NULL) {
-			EmSendCmd14443aRaw(p_response->modulation, p_response->modulation_n, receivedCmd[0] == 0x52 || Uart.parityBits);
+			EmSendCmd14443aRaw(p_response->modulation, p_response->modulation_n, receivedCmd[0] == 0x52);
 			// do the tracing for the previous reader request and this tag answer:
 			uint8_t par[MAX_PARITY_SIZE];
 			GetParity(p_response->response, p_response->response_n, par);
@@ -1471,7 +1471,7 @@ static int EmSendCmd14443aRaw(uint8_t *resp, uint16_t respLen, bool correctionNe
 	FpgaWriteConfWord(FPGA_MAJOR_MODE_HF_ISO14443A | FPGA_HF_ISO14443A_TAGSIM_MOD);
 
 	// include correction bit if necessary
-	if (Uart.parityBits & 0x01) {
+	if (Uart.parityBits & 0x80) {
 		correctionNeeded = TRUE;
 	}
 	if(correctionNeeded) {
